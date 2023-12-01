@@ -1,60 +1,130 @@
 package org.example;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class RolloutValidator {
 
-    private Map<String, String> rolloutTable = new HashMap<>();
+    private static Map<String, String> rolloutCnlTable = new HashMap<>();
+    private static Map<String, String> rolloutDDDTable = new HashMap<>();
+    private static Map<String, String> rolloutCityTable = new HashMap<>();
+    private static Map<String, String> rolloutStateTable = new HashMap<>();
+
+    private Collection<RollOut> rollOuts = new ArrayList<>();
+
     public RolloutValidator() {
-        rolloutTable.put("ALAMBARI", "ALAM 11010 ALAMBARI");
-        rolloutTable.put("ANGATUBA", "ANG 11028 ANGATUBA");
-        rolloutTable.put("ARACOIABA DA SERRA", "ARD 11038 ARACOIABA DA SERRA");
-        rolloutTable.put("BOITUVA", "BTV 11109 BOITUVA");
-        rolloutTable.put("CAMPINA DO MONTE ALEGRE", "CMAL 11710 CAMPINA DO MONTE ALEGRE");
-        rolloutTable.put("CAPELA DO ALTO", "CLT 11146 CAPELA DO ALTO");
-        rolloutTable.put("CERQUILHO", "CQO 11161 CERQUILHO");
-        rolloutTable.put("CESARIO LANGE", "CEG 11162 CESARIO LANGE");
-        rolloutTable.put("GUAREI", "GEI 11253 GUAREI");
-        rolloutTable.put("IBIUNA", "IBN 11266 IBIUNA");
-        rolloutTable.put("IPERO", "IEO 11280 IPERO");
-        rolloutTable.put("ITAPETININGA", "IGA 11292 ITAPETININGA");
-        rolloutTable.put("JUMIRIM", "JUMR 11912 JUMIRIM");
-        rolloutTable.put("LARANJAL PAULISTA", "LJP 11335 LARANJAL PAULISTA");
-        rolloutTable.put("PIEDADE", "PDD 11465 PIEDADE");
-        rolloutTable.put("PILAR DO SUL", "PLL 11466 PILAR DO SUL");
-        rolloutTable.put("PORANGABA", "PON 11496 PORANGABA");
-        rolloutTable.put("PORTO FELIZ", "PRF 11497 PORTO FELIZ");
-        rolloutTable.put("QUADRA", "QUDR 12280 QUADRA");
-        rolloutTable.put("SALTO DE PIRAPORA", "SPR 11585 SALTO DE PIRAPORA");
-        rolloutTable.put("SAO MIGUEL ARCANJO", "SGJ 11569 SAO MIGUEL ARCANJO");
-        rolloutTable.put("SARAPUI", "SRP 11593 SARAPUI");
-        rolloutTable.put("SOROCABA", "SOC 11609 SOROCABA");
-        rolloutTable.put("TAPIRAI", "TIA 11651 TAPIRAI");
-        rolloutTable.put("TATUI", "TTI 11660 TATUI");
-        rolloutTable.put("TIETE", "TIE 11666 TIETE");
-        rolloutTable.put("TORRE DE PEDRA", "TEPD 12276 TORRE DE PEDRA");
-        rolloutTable.put("VOTORANTIM", "VOM 11885 VOTORANTIM");
+        rolloutCnlTable.put( "ALAM 11010 ALAMBARI","ALAMBARI");
+        rolloutCnlTable.put("ANG 11028 ANGATUBA","ANGATUBA");
+        rolloutCnlTable.put("ARD 11038 ARACOIABA DA SERRA", "ARACOIABA DA SERRA");
+
+        rolloutDDDTable.put( "15","ALAM");
+        rolloutDDDTable.put("15","ANG");
+        rolloutDDDTable.put("15","ARD");
+
+        rolloutCityTable.put("ALAMBARI", "SP");
+        rolloutCityTable.put("ANGATUBA", "SP");
+        rolloutCityTable.put("ARACOIABA DA SERRA", "SP");
+
+        rolloutStateTable.put("SP", "ALAM");
+        rolloutStateTable.put("SP", "ANG");
+        rolloutStateTable.put("SP", "ARD");
+
+        rollOuts.add(new RollOut("SP", "ALAMBARI", "15", "ALAM 11010 ALAMBARI"));
+        rollOuts.add(new RollOut("SP", "ANGATUBA", "15", "ANG 11028 ANGATUBA"));
+        rollOuts.add(new RollOut("SP", "ARACOIABA DA SERRA", "15", "ARD 11038 ARACOIABA DA SERRA"));
     }
 
 
     public static boolean validateGeneral(String state, String city, String ddd, String cnl) {
-        return true;
+        boolean stateValid = validateAndApplyRollout(state, rolloutStateTable, "State");
+        boolean cityValid = validateAndApplyRollout(city, rolloutCityTable, "City");
+        boolean dddValid = validateAndApplyRollout(ddd, rolloutDDDTable, "DDD");
+        boolean cnlValid = validateAndApplyRollout(cnl, rolloutCnlTable, "CNL");
+
+        if (stateValid && cityValid && dddValid && cnlValid) {
+            System.out.println("Rollout changes applied successfully.");
+            return true;
+        }
+        if(stateValid && cnlValid){
+            System.out.println("Rollout changes for state and CNL applied successfully.");
+            return true;
+        }
+        if (cityValid && dddValid){
+                System.out.println("Rollout changes for city and DDD applied successfully.");
+                return true;
+        }
+        else {
+            System.out.println("No rollout changes applied.");
+            return false;
+        }
     }
 
-    public static boolean getRolloutByState(String state) {
-        return true;
+    private static boolean validateAndApplyRollout(String parameter, Map<String, String> rolloutTable, String parameterName) {
+        if (rolloutTable.containsKey(parameter)) {
+            System.out.println(parameterName + "-specific rollout changes applied for: " + parameter);
+            return true;
+        } else {
+            System.out.println("No " + parameterName + "-specific rollout changes for: " + parameter);
+            return false;
+        }
     }
 
-    public static boolean getRolloutByCity(String city) {
-        return true;
+    public Collection<RollOut> getRollOuts() {
+        return rollOuts;
     }
 
-    public static boolean getRolloutByDDD(String ddd) {
-        return true;
+    public static boolean getRolloutByDDD(String ddd, String state) {
+        return rolloutDDDTable.containsKey(ddd) && rolloutDDDTable.get(ddd).equals(state);
     }
 
-    public static boolean getRolloutByCNL(String cnl) {
-        return true;
+    public static boolean getRolloutByCity(String city, String state) {
+        return rolloutCityTable.containsKey(city) && rolloutCityTable.get(city).equals(state);
+    }
+
+    public static boolean getRolloutByState(String state, String cnl) {
+        return rolloutStateTable.containsKey(state) && rolloutStateTable.get(state).equals(cnl);
+    }
+
+    public List<RollOut> getRolloutByState(String state) {
+        List<RollOut> list = new ArrayList<>();
+
+        if(rolloutStateTable.containsKey(state)) {
+           for (RollOut rollOut: rollOuts){
+               if (rollOut.getState().equals(state))
+                   list.add(rollOut);
+           }
+        }
+        return list;
+    }
+
+    public RollOut getRolloutByCity(String city) {
+        if(rolloutCityTable.containsKey(city)) {
+            for (RollOut rollOut: rollOuts){
+                if (rollOut.getCity().equals(city))
+                    return rollOut;
+            }
+        }
+        return null;
+    }
+
+    public List<RollOut> getRolloutByDDD(String ddd) {
+        List<RollOut> list = new ArrayList<>();
+
+        if(rolloutDDDTable.containsKey(ddd)) {
+            for (RollOut rollOut: rollOuts){
+                if (rollOut.getDdd().equals(ddd))
+                    list.add(rollOut);
+            }
+        }
+        return list;
+    }
+
+    public RollOut getRolloutByCNL(String cnl) {
+        if(rolloutCnlTable.containsKey(cnl)) {
+            for (RollOut rollOut: rollOuts){
+                if (rollOut.getCnl().equals(cnl))
+                    return rollOut;
+            }
+        }
+        return null;
     }
 }
