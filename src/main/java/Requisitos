@@ -1,0 +1,79 @@
+Lançamentos operacionais (Rollout)
+
+Um rollout é uma implementação de um novo sistema dentro de uma empresa, por exemplo
+um novo sistema de planejamento de recursos empresariais (ERP),
+que pode incluir toda a empresa ou apenas departamentos selecionados.
+
+Em uma loja, existem diversas regras de rollout, baseadas nos seguintes critérios:
+por Estado
+por Cidade
+por DDD
+por CNL
+
+Precisamos criar vários métodos para validação do rollout:
+
+um método para validação geral, que recebe todos os parâmetros possíveis de regras que são:
+Estado
+Cidade
+DDD
+CNL
+
+Assim que entrar no método já buscar as regras pelo code e seguir a validação abaixo:
+Validar se o Estado informado existe na tabela de rollout
+Se sim aplica as alterações do rollout
+Se não mantém como está
+Validar se a Cidade informada existe na tabela de rollout
+Se sim aplica as alterações do rollout
+Se não mantém como está
+Validar se o DDD informado existe na tabela de rollout
+Se sim aplica as alterações do rollout
+Se não mantém como está
+Validar se o CNL informado existe na tabela de rollout
+Se sim aplica as alterações do rollout
+Se não mantém como está
+Se a regra de rollout não existir
+Segue como está
+
+Método para validação específica
+
+Criar métodos para validar uma regra específica
+getRolloutByState
+getRolloutByCity
+getRolloutByDDD
+getRolloutByCNL
+
+Se for encontrado a regra em algum dos métodos
+Se sim aplica as alterações do rollout
+Se não mantém como está
+Se a regra de rollout não existir
+Segue como está
+
+Testes unitários
+
+
+Criar testes unitários para validar se as regras criadas estão funcionando:
+
+Validar o Método geral
+Passando todos os campos para validação
+Estado válido
+Estado Inválido
+Cidade válida
+Cidade inválida
+DDD válido
+DDD inválido
+CNL válido
+CNL inválido
+Passando só Estado e CNL
+Estado válido
+Estado Inválido
+CNL válido
+CNL inválido
+Passando só Cidade e DDD
+Cidade válida
+Cidade inválida
+DDD válido
+DDD inválido
+Validar o getRolloutByState
+Validar o getRolloutByCity
+Validar o getRolloutByDDD
+Validar o getRolloutByCNL
