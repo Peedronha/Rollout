@@ -40,10 +40,8 @@ public class RolloutValidator {
         boolean dddValid = validateAndApplyRollout(ddd, rolloutDDDTable, "DDD");
         boolean cnlValid = validateAndApplyRollout(cnl, rolloutCnlTable, "CNL");
 
-        if (stateValid && cityValid && dddValid && cnlValid) {
-            System.out.println("Rollout changes applied successfully.");
-            return true;
-        }
+        //(stateValid && cityValid) && (dddValid && cnlValid)
+
         if(stateValid && cnlValid){
             System.out.println("Rollout changes for state and CNL applied successfully.");
             return true;
@@ -51,6 +49,10 @@ public class RolloutValidator {
         if (cityValid && dddValid){
                 System.out.println("Rollout changes for city and DDD applied successfully.");
                 return true;
+        }
+        if ((stateValid && cityValid) && (dddValid && cnlValid)) {
+            System.out.println("Rollout changes applied successfully.");
+            return true;
         }
         else {
             System.out.println("No rollout changes applied.");
